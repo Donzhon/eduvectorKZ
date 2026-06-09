@@ -78,17 +78,18 @@ productsNavToggle?.addEventListener("click", (event) => {
   productsScrollSection.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-const NODI_INTRO_VIDEO = "assets/nodi-1.mp4";
-const NODI_LOOP_VIDEO = "assets/nodi-2.mp4";
-const NODI_EXIT_VIDEO = "assets/nodi-3.mp4";
-const INTELLECTUM_MAIN_VIDEO = "assets/intellectum-1.mp4";
+const NODI_INTRO_VIDEO = "assets/video/nodi-in.mp4";
+const NODI_LOOP_VIDEO = "assets/video/nodi-main.mp4";
+const NODI_EXIT_VIDEO = "assets/video/nodi-intellectum.mp4";
+const INTELLECTUM_MAIN_IMAGE = "assets/video/intellectum.jpg";
 
 const videoLayers = Array.from(document.querySelectorAll(".bg-video"));
 const bgCanvas = document.querySelector(".bg-canvas");
 const bgCtx = bgCanvas ? bgCanvas.getContext("2d") : null;
 const CROSSFADE_MS = 700;
-let currentVideoSrc = NODI_INTRO_VIDEO;
+let currentBackgroundSrc = NODI_INTRO_VIDEO;
 let visibleLayerIndex = 0;
+let isShowingImage = false;
 let isTransitioning = false;
 let failedAttempts = 0;
 let videoDisabled = false;
@@ -96,9 +97,12 @@ let galleryActiveIndex = 0;
 let videoAfterEndSrc = null;
 let intellectumIntroLayoutHook = null;
 let intellectumLayoutOffHook = null;
+const backgroundImages = new Map();
+
+const isImageSrc = (src) => /\.(jpe?g|png|webp|gif)$/i.test(src);
 
 const maybeStartIntellectumLayout = (src) => {
-  if (src === INTELLECTUM_MAIN_VIDEO) {
+  if (src === INTELLECTUM_MAIN_IMAGE) {
     intellectumIntroLayoutHook?.();
   }
 };
@@ -118,38 +122,65 @@ const resizeCanvas = () => {
   bgCanvas.height = Math.max(1, Math.round(bgCanvas.clientHeight * dpr));
 };
 
-// Draw a video frame with object-fit: cover behaviour.
-const drawCover = (video, alpha) => {
-  if (!bgCtx || !video || video.readyState < 2) {
+const getSourceDimensions = (source) => {
+  if (source instanceof HTMLVideoElement) {
+    if (source.readyState < 2) {
+      return null;
+    }
+
+    return { width: source.videoWidth, height: source.videoHeight };
+  }
+
+  if (source instanceof HTMLImageElement) {
+    if (!source.complete || !source.naturalWidth) {
+      return null;
+    }
+
+    return { width: source.naturalWidth, height: source.naturalHeight };
+  }
+
+  return null;
+};
+
+// Draw a video frame or still image with object-fit: cover behaviour.
+const drawCoverSource = (source, alpha) => {
+  if (!bgCtx || !source) {
     return;
   }
 
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
-
-  if (!vw || !vh) {
+  const dimensions = getSourceDimensions(source);
+  if (!dimensions) {
     return;
   }
 
+  const { width: sw, height: sh } = dimensions;
   const cw = bgCanvas.width;
   const ch = bgCanvas.height;
-  const scale = Math.max(cw / vw, ch / vh);
-  const dw = vw * scale;
-  const dh = vh * scale;
+  const scale = Math.max(cw / sw, ch / sh);
+  const dw = sw * scale;
+  const dh = sh * scale;
 
   bgCtx.globalAlpha = alpha;
-  bgCtx.drawImage(video, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+  bgCtx.drawImage(source, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
   bgCtx.globalAlpha = 1;
+};
+
+const getVisibleBackgroundSource = () => {
+  if (isShowingImage) {
+    return backgroundImages.get(currentBackgroundSrc) ?? null;
+  }
+
+  return videoLayers[visibleLayerIndex] ?? null;
 };
 
 const renderFrame = () => {
   if (bgCtx && !videoDisabled && videoLayers.length > 0) {
     if (fadeTo) {
       const t = Math.min(1, (performance.now() - fadeStart) / CROSSFADE_MS);
-      drawCover(fadeFrom, 1);
-      drawCover(fadeTo, t);
+      drawCoverSource(fadeFrom, 1);
+      drawCoverSource(fadeTo, t);
     } else {
-      drawCover(videoLayers[visibleLayerIndex], 1);
+      drawCoverSource(getVisibleBackgroundSource(), 1);
     }
   }
 
@@ -170,17 +201,25 @@ const tryPlay = (layer) => {
   }
 };
 
-const layerSrcMatches = (layer, src) => {
-  if (!layer?.src) {
+const mediaSrcMatches = (media, src) => {
+  if (!media?.src) {
     return false;
   }
 
   try {
-    return layer.src.endsWith(src) || new URL(layer.src).pathname.endsWith(src);
+    return media.src.endsWith(src) || new URL(media.src).pathname.endsWith(src);
   } catch {
-    return layer.src.endsWith(src);
+    return media.src.endsWith(src);
   }
 };
+
+const layerSrcMatches = (layer, src) => mediaSrcMatches(layer, src);
+
+const pauseAllVideoLayers = () => {
+  videoLayers.forEach((layer) => layer.pause());
+};
+
+const getCurrentVideoLayer = () => (isShowingImage ? null : videoLayers[visibleLayerIndex]);
 
 // Always load the requested clip and rewind to the first frame before playback.
 const prepareLayerSrc = (layer, src) =>
@@ -190,7 +229,7 @@ const prepareLayerSrc = (layer, src) =>
     const onReady = () => {
       layer.pause();
       layer.currentTime = 0;
-      resolve();
+      resolve(layer);
     };
 
     if (!needsSrcChange && layer.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
@@ -212,8 +251,46 @@ const prepareLayerSrc = (layer, src) =>
     layer.load();
   });
 
+const prepareBackgroundImage = (src) => {
+  const cached = backgroundImages.get(src);
+
+  if (cached?.complete && cached.naturalWidth > 0) {
+    return Promise.resolve(cached);
+  }
+
+  return new Promise((resolve, reject) => {
+    const img = cached ?? new Image();
+
+    if (!cached) {
+      backgroundImages.set(src, img);
+    }
+
+    const onReady = () => resolve(img);
+
+    img.addEventListener("load", onReady, { once: true });
+    img.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once: true });
+
+    if (!mediaSrcMatches(img, src)) {
+      img.src = src;
+    } else if (img.complete && img.naturalWidth > 0) {
+      onReady();
+    }
+  });
+};
+
 const preloadBackgroundSrc = (src) => {
-  if (videoLayers.length < 2 || !src || isTransitioning) {
+  if (!src || isTransitioning) {
+    return;
+  }
+
+  if (isImageSrc(src)) {
+    prepareBackgroundImage(src).catch(() => {
+      // Preload errors are handled when the asset becomes active.
+    });
+    return;
+  }
+
+  if (videoLayers.length < 2) {
     return;
   }
 
@@ -262,8 +339,115 @@ const whenFrameReady = (layer, callback) => {
   window.setTimeout(run, 500);
 };
 
+const whenImageReady = (image, callback) => {
+  let done = false;
+
+  const run = () => {
+    if (done) {
+      return;
+    }
+    done = true;
+    callback();
+  };
+
+  if (image.complete && image.naturalWidth > 0) {
+    run();
+    return;
+  }
+
+  image.addEventListener("load", run, { once: true });
+  window.setTimeout(run, 500);
+};
+
+const beginCrossfade = (fromSource, toSource, nextSrc, onComplete) => {
+  maybeStartIntellectumLayout(nextSrc);
+  fadeFrom = fromSource;
+  fadeTo = toSource;
+  fadeStart = performance.now();
+
+  window.setTimeout(() => {
+    onComplete();
+    fadeFrom = null;
+    fadeTo = null;
+    isTransitioning = false;
+  }, CROSSFADE_MS);
+};
+
+const crossfadeToImage = (nextSrc) => {
+  const fromSource = isShowingImage
+    ? backgroundImages.get(currentBackgroundSrc)
+    : videoLayers[visibleLayerIndex];
+
+  prepareBackgroundImage(nextSrc)
+    .then((image) => {
+      whenImageReady(image, () => {
+        beginCrossfade(fromSource, image, nextSrc, () => {
+          isShowingImage = true;
+          currentBackgroundSrc = nextSrc;
+          pauseAllVideoLayers();
+        });
+      });
+    })
+    .catch(() => {
+      isTransitioning = false;
+      handleVideoError();
+    });
+};
+
+const crossfadeFromImageToVideo = (nextSrc) => {
+  const fromImage = backgroundImages.get(currentBackgroundSrc);
+  const nextLayer = videoLayers[visibleLayerIndex ^ 1];
+
+  prepareLayerSrc(nextLayer, nextSrc)
+    .then(() => {
+      tryPlay(nextLayer);
+
+      whenFrameReady(nextLayer, () => {
+        beginCrossfade(fromImage, nextLayer, nextSrc, () => {
+          isShowingImage = false;
+          visibleLayerIndex ^= 1;
+          currentBackgroundSrc = nextSrc;
+          tryPlay(videoLayers[visibleLayerIndex]);
+        });
+      });
+    })
+    .catch(() => {
+      isTransitioning = false;
+      handleVideoError();
+    });
+};
+
+const crossfadeToVideo = (nextSrc) => {
+  const currentLayer = videoLayers[visibleLayerIndex];
+  const nextLayer = videoLayers[visibleLayerIndex ^ 1];
+
+  prepareLayerSrc(nextLayer, nextSrc)
+    .then(() => {
+      tryPlay(nextLayer);
+
+      whenFrameReady(nextLayer, () => {
+        beginCrossfade(currentLayer, nextLayer, nextSrc, () => {
+          visibleLayerIndex ^= 1;
+          currentBackgroundSrc = nextSrc;
+          currentLayer.pause();
+          tryPlay(videoLayers[visibleLayerIndex]);
+        });
+      });
+    })
+    .catch(() => {
+      isTransitioning = false;
+      handleVideoError();
+    });
+};
+
 const crossfadeToSrc = (nextSrc) => {
   if (isTransitioning || videoLayers.length === 0 || !nextSrc) {
+    return;
+  }
+
+  if (isImageSrc(nextSrc)) {
+    isTransitioning = true;
+    crossfadeToImage(nextSrc);
     return;
   }
 
@@ -273,7 +457,8 @@ const crossfadeToSrc = (nextSrc) => {
 
     prepareLayerSrc(onlyLayer, nextSrc)
       .then(() => {
-        currentVideoSrc = nextSrc;
+        isShowingImage = false;
+        currentBackgroundSrc = nextSrc;
         tryPlay(onlyLayer);
         whenFrameReady(onlyLayer, () => maybeStartIntellectumLayout(nextSrc));
       })
@@ -286,61 +471,58 @@ const crossfadeToSrc = (nextSrc) => {
 
   isTransitioning = true;
 
-  const currentLayer = videoLayers[visibleLayerIndex];
-  const nextLayer = videoLayers[visibleLayerIndex ^ 1];
+  if (isShowingImage) {
+    crossfadeFromImageToVideo(nextSrc);
+    return;
+  }
 
-  prepareLayerSrc(nextLayer, nextSrc)
-    .then(() => {
-      tryPlay(nextLayer);
-
-      whenFrameReady(nextLayer, () => {
-        maybeStartIntellectumLayout(nextSrc);
-        fadeFrom = currentLayer;
-        fadeTo = nextLayer;
-        fadeStart = performance.now();
-
-        window.setTimeout(() => {
-          visibleLayerIndex ^= 1;
-          currentVideoSrc = nextSrc;
-          fadeFrom = null;
-          fadeTo = null;
-          currentLayer.pause();
-          isTransitioning = false;
-          tryPlay(videoLayers[visibleLayerIndex]);
-        }, CROSSFADE_MS);
-      });
-    })
-    .catch(() => {
-      isTransitioning = false;
-      handleVideoError();
-    });
+  crossfadeToVideo(nextSrc);
 };
 
-const playBackgroundSrc = (src) => {
+const resetBackgroundTransition = () => {
+  isTransitioning = false;
+  fadeFrom = null;
+  fadeTo = null;
+};
+
+const playBackgroundSrc = (src, { force = false } = {}) => {
   if (videoDisabled || !src) {
     return;
+  }
+
+  if (force) {
+    resetBackgroundTransition();
   }
 
   crossfadeToSrc(src);
 };
 
 const replayBackgroundSrc = (src) => {
-  if (videoDisabled || !src) {
+  if (videoDisabled || !src || isImageSrc(src)) {
     return;
   }
 
-  const layer = videoLayers[visibleLayerIndex];
+  if (isShowingImage) {
+    playBackgroundSrc(src);
+    return;
+  }
+
+  const layer = getCurrentVideoLayer();
   if (!layer || !layerSrcMatches(layer, src)) {
     playBackgroundSrc(src);
     return;
   }
 
-  currentVideoSrc = src;
+  currentBackgroundSrc = src;
   layer.currentTime = 0;
   tryPlay(layer);
 };
 
 const handleBackgroundEnded = () => {
+  if (isShowingImage) {
+    return;
+  }
+
   if (videoAfterEndSrc) {
     const nextSrc = videoAfterEndSrc;
     videoAfterEndSrc = null;
@@ -349,9 +531,10 @@ const handleBackgroundEnded = () => {
   }
 
   if (galleryActiveIndex === 0) {
-    const visibleLayer = videoLayers[visibleLayerIndex];
+    const visibleLayer = getCurrentVideoLayer();
     const onIntro =
-      currentVideoSrc === NODI_INTRO_VIDEO || layerSrcMatches(visibleLayer, NODI_INTRO_VIDEO);
+      currentBackgroundSrc === NODI_INTRO_VIDEO ||
+      (visibleLayer && layerSrcMatches(visibleLayer, NODI_INTRO_VIDEO));
 
     if (onIntro) {
       playBackgroundSrc(NODI_LOOP_VIDEO);
@@ -359,8 +542,8 @@ const handleBackgroundEnded = () => {
     }
 
     if (
-      currentVideoSrc === NODI_LOOP_VIDEO ||
-      layerSrcMatches(visibleLayer, NODI_LOOP_VIDEO)
+      currentBackgroundSrc === NODI_LOOP_VIDEO ||
+      (visibleLayer && layerSrcMatches(visibleLayer, NODI_LOOP_VIDEO))
     ) {
       replayBackgroundSrc(NODI_LOOP_VIDEO);
     }
@@ -368,8 +551,8 @@ const handleBackgroundEnded = () => {
     return;
   }
 
-  if (galleryActiveIndex === 1) {
-    playBackgroundSrc(INTELLECTUM_MAIN_VIDEO);
+  if (galleryActiveIndex === 1 && !isShowingImage) {
+    playBackgroundSrc(INTELLECTUM_MAIN_IMAGE);
   }
 };
 
@@ -378,24 +561,24 @@ const onGalleryProductChange = (prevIndex, nextIndex) => {
   videoAfterEndSrc = null;
 
   if (prevIndex === 0 && nextIndex === 1) {
+    videoAfterEndSrc = INTELLECTUM_MAIN_IMAGE;
+    playBackgroundSrc(NODI_EXIT_VIDEO, { force: true });
+    schedulePreloadBackgroundSrc(INTELLECTUM_MAIN_IMAGE);
     intellectumIntroLayoutHook?.();
-    videoAfterEndSrc = INTELLECTUM_MAIN_VIDEO;
-    playBackgroundSrc(NODI_EXIT_VIDEO);
-    schedulePreloadBackgroundSrc(INTELLECTUM_MAIN_VIDEO);
     return;
   }
 
   if (nextIndex === 0) {
-    intellectumLayoutOffHook?.();
-    playBackgroundSrc(NODI_INTRO_VIDEO);
+    playBackgroundSrc(NODI_INTRO_VIDEO, { force: true });
     schedulePreloadBackgroundSrc(NODI_LOOP_VIDEO);
+    intellectumLayoutOffHook?.();
     return;
   }
 
   if (nextIndex === 1 && prevIndex !== 0) {
+    playBackgroundSrc(INTELLECTUM_MAIN_IMAGE, { force: true });
+    schedulePreloadBackgroundSrc(INTELLECTUM_MAIN_IMAGE);
     intellectumIntroLayoutHook?.();
-    playBackgroundSrc(INTELLECTUM_MAIN_VIDEO);
-    schedulePreloadBackgroundSrc(INTELLECTUM_MAIN_VIDEO);
   }
 };
 
@@ -414,13 +597,13 @@ const handleVideoError = () => {
   }
 
   if (galleryActiveIndex === 0) {
-    if (currentVideoSrc === NODI_INTRO_VIDEO) {
+    if (currentBackgroundSrc === NODI_INTRO_VIDEO) {
       playBackgroundSrc(NODI_LOOP_VIDEO);
     } else {
       replayBackgroundSrc(NODI_LOOP_VIDEO);
     }
   } else if (galleryActiveIndex === 1) {
-    playBackgroundSrc(INTELLECTUM_MAIN_VIDEO);
+    playBackgroundSrc(INTELLECTUM_MAIN_IMAGE);
   }
 };
 
@@ -432,12 +615,20 @@ if (videoLayers.length > 0 && bgCtx) {
     layer.disablePictureInPicture = true;
 
     layer.addEventListener("ended", () => {
+      if (isShowingImage) {
+        return;
+      }
+
       if (layer === videoLayers[visibleLayerIndex] && !isTransitioning) {
         handleBackgroundEnded();
       }
     });
 
     layer.addEventListener("error", () => {
+      if (isShowingImage) {
+        return;
+      }
+
       if (layer === videoLayers[visibleLayerIndex] && !isTransitioning) {
         handleVideoError();
       }
@@ -452,9 +643,11 @@ if (videoLayers.length > 0 && bgCtx) {
 
   prepareLayerSrc(firstLayer, NODI_INTRO_VIDEO)
     .then(() => {
-      currentVideoSrc = NODI_INTRO_VIDEO;
+      isShowingImage = false;
+      currentBackgroundSrc = NODI_INTRO_VIDEO;
       tryPlay(firstLayer);
       schedulePreloadBackgroundSrc(NODI_LOOP_VIDEO);
+      schedulePreloadBackgroundSrc(INTELLECTUM_MAIN_IMAGE);
     })
     .catch(handleVideoError);
 
@@ -463,6 +656,7 @@ if (videoLayers.length > 0 && bgCtx) {
 
 const PRESETS_STORAGE_KEY = "intellectum-us-glass-presets";
 const ACTIVE_PRESET_KEY = "intellectum-us-active-preset";
+const DEFAULT_PRESET_ID = "user-5";
 const LEFT_GLASS_SETTINGS_KEY = "intellectum-us-left-glass-settings";
 const LEFT_GLASS_BLUR_LEGACY_KEY = "intellectum-us-left-glass-blur";
 
@@ -550,12 +744,35 @@ const updateHeroPanelArrowMode = (intellectum) => {
 };
 
 document.addEventListener("site-language-change", () => {
-  updateHeroPanelArrowMode(heroStage?.classList.contains("is-intellectum") ?? false);
+  const intellectum = heroStage?.classList.contains("is-intellectum") ?? false;
+  updateHeroPanelArrowMode(intellectum);
+  updateLeadFormProduct(intellectum);
 });
 
 const updateHeadlineMirrorVisibility = (intellectum) => {
   splitHeadline?.setAttribute("aria-hidden", intellectum ? "true" : "false");
   splitHeadlineMirror?.setAttribute("aria-hidden", intellectum ? "false" : "true");
+};
+
+const updateLeadFormProduct = (intellectum) => {
+  const t = window.SiteI18n?.t;
+  if (!t) {
+    return;
+  }
+
+  const prefix = intellectum ? "form.intellectum" : "form.nodi";
+  const titleEl = document.getElementById("lead-form-title");
+  const leadEl = document.querySelector(".lead-form__lead");
+
+  if (titleEl) {
+    titleEl.dataset.i18n = `${prefix}.title`;
+    titleEl.textContent = t(titleEl.dataset.i18n);
+  }
+
+  if (leadEl) {
+    leadEl.dataset.i18n = `${prefix}.lead`;
+    leadEl.textContent = t(leadEl.dataset.i18n);
+  }
 };
 
 const animatePanelMirror = (enableIntellectum) => {
@@ -567,6 +784,7 @@ const animatePanelMirror = (enableIntellectum) => {
   heroStage.classList.toggle("is-intellectum", enableIntellectum);
   updateHeadlineMirrorVisibility(enableIntellectum);
   updateHeroPanelArrowMode(enableIntellectum);
+  updateLeadFormProduct(enableIntellectum);
   const lastRect = leftContentGroup.getBoundingClientRect();
   const invertX = firstRect.left - lastRect.left;
 
@@ -759,7 +977,7 @@ const getActivePresetId = (presets) => {
     return savedId;
   }
 
-  return "user-5";
+  return DEFAULT_PRESET_ID;
 };
 
 const applyLeftGlassSettings = (settings) => {
@@ -918,14 +1136,20 @@ if (leftContent && blurRange && shadowRange && overlayRange && panelDimRange && 
   }
 
   let activePresetId = getActivePresetId(presets);
-  let settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS["user-5"]);
+  let settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS[DEFAULT_PRESET_ID]);
+
+  if (!localStorage.getItem(ACTIVE_PRESET_KEY)) {
+    localStorage.setItem(ACTIVE_PRESET_KEY, DEFAULT_PRESET_ID);
+    activePresetId = DEFAULT_PRESET_ID;
+    settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS[DEFAULT_PRESET_ID]);
+  }
 
   fillPresetSelect(presets, activePresetId);
   applyLeftGlassSettings(settings);
 
   presetSelect?.addEventListener("change", () => {
     activePresetId = presetSelect.value;
-    settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS["user-5"]);
+    settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS[DEFAULT_PRESET_ID]);
     localStorage.setItem(ACTIVE_PRESET_KEY, activePresetId);
     applyLeftGlassSettings(settings);
   });
@@ -997,6 +1221,78 @@ const leadSubmitBtn = document.querySelector(".lead-form__submit");
 
 const isLeadEmailValid = () =>
   Boolean(leadEmailInput?.value.trim() && leadEmailInput.checkValidity());
+
+let leadFormToast = null;
+let leadFormToastTimer = null;
+
+const LEAD_TOAST_GLASS_VARS = [
+  "--panel-tint-color",
+  "--panel-dim-strength",
+  "--panel-text-color",
+  "--left-glass-shadow",
+  "--left-glass-backdrop-filter",
+];
+
+const positionLeadFormToast = () => {
+  if (!leadFormToast || !siteActions) {
+    return;
+  }
+
+  const rect = siteActions.getBoundingClientRect();
+  const gap = 9;
+  leadFormToast.style.top = `${rect.bottom + gap}px`;
+  leadFormToast.style.right = `${Math.max(0, window.innerWidth - rect.right)}px`;
+
+  const hostStyle = getComputedStyle(siteActions);
+  LEAD_TOAST_GLASS_VARS.forEach((prop) => {
+    leadFormToast.style.setProperty(prop, hostStyle.getPropertyValue(prop));
+  });
+};
+
+const onLeadFormToastReposition = () => {
+  if (leadFormToast?.classList.contains("is-visible")) {
+    positionLeadFormToast();
+  }
+};
+
+window.addEventListener("resize", onLeadFormToastReposition, { passive: true });
+window.addEventListener("scroll", onLeadFormToastReposition, { passive: true });
+
+const showLeadFormSuccess = () => {
+  const translate = window.SiteI18n?.t ?? ((key) => key);
+
+  if (!leadFormToast) {
+    leadFormToast = document.createElement("div");
+    leadFormToast.className = "lead-form__toast liquid-glass";
+    leadFormToast.setAttribute("role", "status");
+    leadFormToast.setAttribute("aria-live", "polite");
+    document.body.appendChild(leadFormToast);
+  }
+
+  leadFormToast.textContent = translate("form.success");
+  positionLeadFormToast();
+  leadFormToast.hidden = false;
+  leadFormToast.classList.remove("is-visible");
+  void leadFormToast.offsetWidth;
+  leadFormToast.classList.add("is-visible");
+
+  window.clearTimeout(leadFormToastTimer);
+  leadFormToastTimer = window.setTimeout(() => {
+    leadFormToast?.classList.remove("is-visible");
+    window.setTimeout(() => {
+      if (leadFormToast) {
+        leadFormToast.hidden = true;
+      }
+    }, 320);
+  }, 4200);
+};
+
+document.addEventListener("site-language-change", () => {
+  if (leadFormToast?.classList.contains("is-visible")) {
+    const translate = window.SiteI18n?.t ?? ((key) => key);
+    leadFormToast.textContent = translate("form.success");
+  }
+});
 
 const playLeadSubmitError = () => {
   if (!leadSubmitBtn) {
@@ -1388,11 +1684,13 @@ leadForm?.addEventListener("submit", (event) => {
     return;
   }
 
+  event.preventDefault();
+
   if (isLeadEmailValid()) {
+    showLeadFormSuccess();
     return;
   }
 
-  event.preventDefault();
   leadEmailInput.focus({ preventScroll: false });
   leadEmailInput.scrollIntoView({ block: "nearest", behavior: "smooth" });
   playLeadSubmitError();

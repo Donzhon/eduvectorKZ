@@ -13,9 +13,12 @@ const SITE_I18N = {
     "hero.nodi.2": "School Education",
     "hero.intellectum.1": "Develop your personal",
     "hero.intellectum.2": "intelligence",
-    "form.title": "Nodi Ecosystem",
-    "form.lead":
+    "form.nodi.title": "Nodi Ecosystem",
+    "form.nodi.lead":
       "Stepper is an educational IoT device that demonstrates how code transforms into motion using magnetic force.",
+    "form.intellectum.title": "Intellectum",
+    "form.intellectum.lead":
+      "Hands-on tabletop developmental games for kindergarten classrooms — playful activities that build logic, memory, focus, and fine motor skills through guided group play.",
     "form.email": "Your email",
     "form.comment": "Comments about product...",
     "form.reasonLegend": "Why you need it?",
@@ -24,6 +27,7 @@ const SITE_I18N = {
     "form.reasonReselling": "For reselling",
     "form.reasonOther": "Other",
     "form.submit": "Submit request",
+    "form.success": "Your request has been sent",
     "menu.explore": "Explore Now",
     "gallery.products": "Products",
     "gallery.prev": "Previous product",
@@ -61,6 +65,16 @@ const SITE_I18N = {
     "categories.nodi.title": "Nodi Ecosystem",
     "categories.nodi.desc": "Educational robotics and STEM learning.",
     "categories.cta": "Learn More >",
+    "footer.tagline":
+      "Educational technology for schools, kindergartens, and STEM classrooms worldwide.",
+    "footer.products": "Products",
+    "footer.company": "Company",
+    "footer.contact": "Contact",
+    "footer.categories": "Product categories",
+    "footer.location": "Kazakhstan, Astana, Rakhymzhan Koshkarbayev Ave. 1/4, 3rd floor",
+    "footer.copyright": "© 2026 EduVector Distribution. All rights reserved.",
+    "footer.privacy": "Privacy Policy",
+    "footer.terms": "Terms of Use",
   },
   kaz: {
     "nav.products": "Өнімдер",
@@ -74,9 +88,12 @@ const SITE_I18N = {
     "hero.nodi.2": "инновациялар",
     "hero.intellectum.1": "Жеке",
     "hero.intellectum.2": "интеллекті дамытыңыз",
-    "form.title": "Nodi Ecosystem",
-    "form.lead":
+    "form.nodi.title": "Nodi Ecosystem",
+    "form.nodi.lead":
       "Stepper — кодтың магниттік күш арқылы қозғалысқа қалай айналатынын көрсететін білім беру IoT құрылғысы.",
+    "form.intellectum.title": "Intellectum",
+    "form.intellectum.lead":
+      "Балабақша сыныптарына арналған үстелдегі дамытушылық ойындар — балалар логика, жад, зейін және ұсақ моториканы ойнай отырып дамытады.",
     "form.email": "Электрондық поштаңыз",
     "form.comment": "Өнім туралы пікірлер...",
     "form.reasonLegend": "Неге қажет?",
@@ -85,6 +102,7 @@ const SITE_I18N = {
     "form.reasonReselling": "Қайта сатуға",
     "form.reasonOther": "Басқа",
     "form.submit": "Сұрау жіберу",
+    "form.success": "Сұрауыңыз жіберілді",
     "menu.explore": "Қазір зерттеу",
     "gallery.products": "Өнімдер",
     "gallery.prev": "Алдыңғы өнім",
@@ -122,6 +140,16 @@ const SITE_I18N = {
     "categories.nodi.title": "Nodi Ecosystem",
     "categories.nodi.desc": "Білім беру робототехникасы және STEM оқыту.",
     "categories.cta": "Толығырақ >",
+    "footer.tagline":
+      "Мектептерге, балабақшаларға және STEM сыныптарына арналған білім беру технологиялары.",
+    "footer.products": "Өнімдер",
+    "footer.company": "Компания",
+    "footer.contact": "Байланыс",
+    "footer.categories": "Өнім категориялары",
+    "footer.location": "Қазақстан, Астана қ., Рахымжан Қошқарбаев даңғылы 1/4, 3-ші қабат",
+    "footer.copyright": "© 2026 EduVector Distribution. Барлық құқықтар қорғалған.",
+    "footer.privacy": "Құпиялылық саясаты",
+    "footer.terms": "Пайдалану шарттары",
   },
 };
 

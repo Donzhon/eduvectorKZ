@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IntellectumUS</title>
+    <link rel="icon" href="assets/icon/eduvector_favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,12 +17,9 @@
     <div class="site-chrome" data-nav-merge="auto">
       <a class="site-brand liquid-glass brand" href="index.html" aria-label="EduVector — Home">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2c1.66 0 3 1.79 3 4 0 .73-.15 1.41-.4 2 .59-.25 1.27-.4 2-.4 2.21 0 4 1.34 4 3s-1.79 3-4 3c-.73 0-1.41-.15-2-.4.25.59.4 1.27.4 2 0 2.21-1.34 4-3 4s-3-1.79-3-4c0-.73.15-1.41.4-2-.59.25-1.27.4-2 .4-2.21 0-4-1.34-4-3s1.79-3 4-3c.73 0 1.41.15 2 .4C9.15 7.41 9 6.73 9 6c0-2.21 1.34-4 3-4z" />
-            <circle cx="12" cy="12" r="2.4" fill="#0c1b16" />
-          </svg>
+          <img src="assets/icon/eduvector.svg" alt="" />
         </span>
-        <span class="brand-text">EduVector</span>
+        <span class="brand-text">EduVector Distribution</span>
       </a>
       <nav class="site-nav liquid-glass" aria-label="Site">
         <ul class="site-nav__list">
@@ -31,7 +29,7 @@
               type="button"
               aria-expanded="false"
               aria-haspopup="true"
-              data-scroll-to="product-categories"
+              data-scroll-to="bento-showcase"
             >
               <span data-i18n="nav.products">Products</span>
               <svg class="site-nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -62,7 +60,7 @@
         disablepictureinpicture
         disableremoteplayback
         controlslist="nodownload nofullscreen noremoteplayback"
-        src="assets/nodi-1.mp4"
+        src="assets/video/nodi-in.mp4"
         aria-hidden="true"
       ></video>
       <video
@@ -129,9 +127,9 @@
                     min="0"
                     max="50"
                     step="1"
-                    value="12"
+                    value="50"
                   />
-                  <output class="glass-tuner__value" id="left-glass-blur-value" for="left-glass-blur">12 px</output>
+                  <output class="glass-tuner__value" id="left-glass-blur-value" for="left-glass-blur">50 px</output>
                 </div>
               </div>
               <div class="glass-tuner__control">
@@ -144,9 +142,9 @@
                     min="0"
                     max="60"
                     step="1"
-                    value="20"
+                    value="15"
                   />
-                  <output class="glass-tuner__value" id="left-glass-shadow-value" for="left-glass-shadow">20</output>
+                  <output class="glass-tuner__value" id="left-glass-shadow-value" for="left-glass-shadow">15</output>
                 </div>
               </div>
             </div>
@@ -161,9 +159,9 @@
                     min="0"
                     max="100"
                     step="1"
-                    value="6"
+                    value="0"
                   />
-                  <output class="glass-tuner__value" id="video-overlay-strength-value" for="video-overlay-strength">6%</output>
+                  <output class="glass-tuner__value" id="video-overlay-strength-value" for="video-overlay-strength">0%</output>
                 </div>
               </div>
               <div class="glass-tuner__control">
@@ -176,9 +174,9 @@
                     min="0"
                     max="100"
                     step="1"
-                    value="16"
+                    value="10"
                   />
-                  <output class="glass-tuner__value" id="panel-dim-strength-value" for="panel-dim-strength">16%</output>
+                  <output class="glass-tuner__value" id="panel-dim-strength-value" for="panel-dim-strength">10%</output>
                 </div>
               </div>
               <div class="glass-tuner__control">
@@ -191,9 +189,9 @@
                     min="0"
                     max="100"
                     step="1"
-                    value="65"
+                    value="64"
                   />
-                  <output class="glass-tuner__value" id="lead-field-opacity-value" for="lead-field-opacity">65%</output>
+                  <output class="glass-tuner__value" id="lead-field-opacity-value" for="lead-field-opacity">64%</output>
                 </div>
               </div>
               <div class="glass-tuner__control">
@@ -203,13 +201,13 @@
                     class="glass-tuner__color-input"
                     type="color"
                     id="panel-tint-color"
-                    value="#cac6d2"
+                    value="#1a264c"
                   />
                   <input
                     class="glass-tuner__hex"
                     type="text"
                     id="panel-tint-color-hex"
-                    value="#cac6d2"
+                    value="#1a264c"
                     maxlength="7"
                     spellcheck="false"
                     aria-label="HEX-код цвета блока"
@@ -223,13 +221,13 @@
                     class="glass-tuner__color-input"
                     type="color"
                     id="panel-text-color"
-                    value="#413546"
+                    value="#000000"
                   />
                   <input
                     class="glass-tuner__hex"
                     type="text"
                     id="panel-text-color-hex"
-                    value="#413546"
+                    value="#000000"
                     maxlength="7"
                     spellcheck="false"
                     aria-label="HEX-код цвета текста блока"
@@ -243,13 +241,13 @@
                     class="glass-tuner__color-input"
                     type="color"
                     id="hero-text-color"
-                    value="#0f1412"
+                    value="#000000"
                   />
                   <input
                     class="glass-tuner__hex"
                     type="text"
                     id="hero-text-color-hex"
-                    value="#0f1412"
+                    value="#000000"
                     maxlength="7"
                     spellcheck="false"
                     aria-label="HEX-код цвета Hero-заголовка"
@@ -280,18 +278,15 @@
           <header class="top-nav">
             <a class="brand" href="index.html">
               <span class="brand-mark" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 2c1.66 0 3 1.79 3 4 0 .73-.15 1.41-.4 2 .59-.25 1.27-.4 2-.4 2.21 0 4 1.34 4 3s-1.79 3-4 3c-.73 0-1.41-.15-2-.4.25.59.4 1.27.4 2 0 2.21-1.34 4-3 4s-3-1.79-3-4c0-.73.15-1.41.4-2-.59.25-1.27.4-2 .4-2.21 0-4-1.34-4-3s1.79-3 4-3c.73 0 1.41.15 2 .4C9.15 7.41 9 6.73 9 6c0-2.21 1.34-4 3-4z" />
-                  <circle cx="12" cy="12" r="2.4" fill="#0c1b16" />
-                </svg>
+                <img src="assets/icon/eduvector.svg" alt="" />
               </span>
-              <span class="brand-text">EduVector</span>
+              <span class="brand-text">EduVector  Distribution</span>
             </a>
           </header>
 
           <section class="lead-form" aria-labelledby="lead-form-title">
-            <h1 id="lead-form-title" class="lead-form__title" data-i18n="form.title">Nodi Ecosystem</h1>
-            <p class="lead-form__lead" data-i18n="form.lead">
+            <h1 id="lead-form-title" class="lead-form__title" data-i18n="form.nodi.title">Nodi Ecosystem</h1>
+            <p class="lead-form__lead" data-i18n="form.nodi.lead">
               Stepper is an educational IoT device that demonstrates how code transforms into motion using
               magnetic force.
             </p>
@@ -399,49 +394,49 @@
       </div>
     </div>
 
-    <section id="product-categories" class="product-categories" aria-labelledby="product-categories-title">
-      <h2 class="visually-hidden" id="product-categories-title" data-i18n="categories.title">Product categories</h2>
-      <div class="product-categories__inner">
-        <ul class="product-categories__grid">
-          <li class="product-categories__card">
-            <div class="product-categories__card-content">
-              <p class="product-categories__card-tag" data-i18n="categories.pasco.desc">Digital measuring instruments.</p>
-              <h3 class="product-categories__card-title" data-i18n="categories.pasco.title">Pasco</h3>
-              <a class="product-categories__card-link" href="#" data-i18n="categories.cta">Learn More &gt;</a>
-            </div>
-            <figure class="product-categories__card-media">
-              <img
-                src="assets/Pasco-home-page-science-stem.jpg"
-                alt=""
-                data-i18n-alt="categories.pasco.title"
-              />
-            </figure>
-          </li>
-          <li class="product-categories__card">
-            <div class="product-categories__card-content">
-              <p class="product-categories__card-tag" data-i18n="categories.intellectum.desc">
-                A developmental methodology for kindergartens.
-              </p>
-              <h3 class="product-categories__card-title" data-i18n="categories.intellectum.title">Intellectum</h3>
-              <a class="product-categories__card-link" href="#" data-i18n="categories.cta">Learn More &gt;</a>
-            </div>
-            <figure class="product-categories__card-media">
-              <img src="assets/intellectum.png" alt="" data-i18n-alt="categories.intellectum.title" />
-            </figure>
-          </li>
-          <li class="product-categories__card">
-            <div class="product-categories__card-content">
-              <p class="product-categories__card-tag" data-i18n="categories.nodi.desc">
-                Educational robotics and STEM learning.
-              </p>
-              <h3 class="product-categories__card-title" data-i18n="categories.nodi.title">Nodi Ecosystem</h3>
-              <a class="product-categories__card-link" href="#" data-i18n="categories.cta">Learn More &gt;</a>
-            </div>
-            <figure class="product-categories__card-media">
-              <img src="assets/nodi.png" alt="" data-i18n-alt="categories.nodi.title" />
-            </figure>
-          </li>
-        </ul>
+    <section id="bento-showcase" class="bento-showcase" aria-label="Featured highlights">
+      <div class="bento-showcase__grid">
+        <a class="bento-showcase__cell bento-showcase__cell--a" href="#" data-i18n-aria-label="categories.cta" aria-label="Learn More">
+          <img
+            class="bento-showcase__img"
+            src="assets/intellectum_25-24.png"
+            alt="Intellectum"
+            data-i18n-alt="categories.intellectum.title"
+          />
+        </a>
+        <a class="bento-showcase__cell bento-showcase__cell--b" href="#">
+          <img
+            class="bento-showcase__img"
+            src="assets/neyri_25-16.png"
+            alt="Neyri"
+          />
+        </a>
+        <a class="bento-showcase__cell bento-showcase__cell--c" href="#" data-i18n-aria-label="categories.cta" aria-label="Learn More">
+          <img
+            class="bento-showcase__img"
+            src="assets/nodi_25-24.png"
+            alt="Nodi Ecosystem"
+            data-i18n-alt="categories.nodi.title"
+          />
+        </a>
+        <a class="bento-showcase__cell bento-showcase__cell--d" href="#">
+          <img
+            class="bento-showcase__img"
+            src="assets/labo_25-16.png"
+            alt="School Equipments"
+            data-i18n-alt="nav.equipment"
+          />
+        </a>
+        <a class="bento-showcase__cell bento-showcase__cell--e" href="#">
+          <div class="bento-showcase__media">
+            <img
+              class="bento-showcase__img"
+              src="assets/pasco_5-8.png"
+              alt="Pasco"
+              data-i18n-alt="categories.pasco.title"
+            />
+          </div>
+        </a>
       </div>
     </section>
 
@@ -495,6 +490,60 @@
         </div>
       </div>
     </section>
+
+    <footer class="site-footer" aria-labelledby="site-footer-title">
+      <div class="site-footer__inner">
+        <div class="site-footer__brand">
+          <a class="site-footer__logo brand" href="index.html" aria-label="EduVector — Home">
+            <span class="brand-mark" aria-hidden="true">
+              <img src="assets/icon/eduvector.svg" alt="" />
+            </span>
+            <span class="brand-text">EduVector Distribution</span>
+          </a>
+          <p class="site-footer__tagline" data-i18n="footer.tagline">
+            Educational technology for schools, kindergartens, and STEM classrooms worldwide.
+          </p>
+        </div>
+        <nav class="site-footer__nav" aria-label="Footer products">
+          <h2 class="site-footer__heading" id="site-footer-title" data-i18n="footer.products">Products</h2>
+          <ul class="site-footer__list">
+            <li><a href="#" data-i18n="nav.intellectum">Intellectum</a></li>
+            <li><a href="#" data-i18n="nav.nodi">Nodi</a></li>
+            <li><a href="#" data-i18n="nav.iot">IoT Board</a></li>
+            <li><a href="#" data-i18n="nav.equipment">School Equipments</a></li>
+          </ul>
+        </nav>
+        <nav class="site-footer__nav" aria-label="Footer company">
+          <h2 class="site-footer__heading" data-i18n="footer.company">Company</h2>
+          <ul class="site-footer__list">
+            <li><a href="partners.html" data-i18n="nav.partners">For Partners</a></li>
+            <li><a href="about.html" data-i18n="nav.about">About us</a></li>
+            <li><a href="#bento-showcase" data-i18n="footer.categories">Product categories</a></li>
+          </ul>
+        </nav>
+        <div class="site-footer__contact">
+          <h2 class="site-footer__heading" data-i18n="footer.contact">Contact</h2>
+          <p class="site-footer__contact-line">
+            <a href="tel:+77716080076">+7 771 608 0076</a>
+          </p>
+          <p class="site-footer__contact-line">
+            <a href="mailto:info@eduvector.kz">info@eduvector.kz</a>
+          </p>
+          <p class="site-footer__contact-line" data-i18n="footer.location">
+            Kazakhstan, Astana, Rakhymzhan Koshkarbayev Ave. 1/4, 3rd floor
+          </p>
+        </div>
+      </div>
+      <div class="site-footer__bar">
+        <p class="site-footer__copyright" data-i18n="footer.copyright">
+          © 2026 EduVector Distribution. All rights reserved.
+        </p>
+        <ul class="site-footer__legal">
+          <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+          <li><a href="#" data-i18n="footer.terms">Terms of Use</a></li>
+        </ul>
+      </div>
+    </footer>
 
     <div class="lead-form__select-menu" id="lead-location-menu" hidden>
       <input
