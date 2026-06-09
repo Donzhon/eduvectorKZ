@@ -38,16 +38,6 @@
   isolation: isolate;
 }
 
-.hero-stage .bg-fallback {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background:
-    radial-gradient(circle at 75% 45%, rgba(58, 122, 90, 0.55), transparent 55%),
-    radial-gradient(circle at 20% 80%, rgba(20, 40, 32, 0.8), transparent 60%),
-    linear-gradient(135deg, #04110c 0%, #0a1f17 55%, #020805 100%);
-}
-
 /* Videos are kept off-screen and tiny so browsers (e.g. Yandex) do not
    treat them as a real player and never show a floating/PiP control.
    Their frames are painted onto .bg-canvas instead. */
@@ -1514,6 +1504,7 @@
 .site-brand.liquid-glass,
 .site-nav.liquid-glass,
 .site-actions.liquid-glass,
+.inner-actions.liquid-glass,
 .lead-form__toast.liquid-glass,
 .product-gallery__card.liquid-glass {
   backdrop-filter: var(--left-glass-backdrop-filter);
@@ -1535,6 +1526,7 @@
 .site-brand.liquid-glass::after,
 .site-nav.liquid-glass::after,
 .site-actions.liquid-glass::after,
+.inner-actions.liquid-glass::after,
 .lead-form__toast.liquid-glass::after,
 .product-gallery__card.liquid-glass::after {
   content: "";
@@ -1553,6 +1545,7 @@
 .site-brand.liquid-glass > *,
 .site-nav.liquid-glass > *,
 .site-actions.liquid-glass > *,
+.inner-actions.liquid-glass > *,
 .product-gallery__card.liquid-glass > * {
   position: relative;
   z-index: 1;
@@ -2524,6 +2517,215 @@
 .page-stub__cta:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
+}
+
+/* ---------- Inner pages (Partners / About) ---------- */
+.inner-actions {
+  --panel-tint-color: #cac6d2;
+  --panel-dim-strength: 16;
+  --left-glass-shadow: 20;
+  --left-glass-backdrop-filter: blur(18px) saturate(132%) contrast(109%);
+  --panel-text-color: #413546;
+  position: fixed;
+  top: 1rem;
+  right: clamp(1rem, 5vw, 3rem);
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 999px;
+  color: var(--panel-text-color);
+}
+
+.inner-page__hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: clamp(20rem, 56vh, 32rem);
+  padding: clamp(7rem, 16vh, 11rem) clamp(1.5rem, 6vw, 5rem) clamp(3rem, 8vh, 5rem);
+  background: var(--bloom-mist);
+  color: var(--bloom-ink);
+}
+
+.inner-page__hero-inner {
+  max-width: 46rem;
+}
+
+.inner-page__eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: "Rajdhani", "Segoe UI", ui-sans-serif, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--bloom-ink) 55%, transparent);
+}
+
+.inner-page__title {
+  margin: 0 0 1.25rem;
+  font-family: "Rajdhani", "Segoe UI", ui-sans-serif, sans-serif;
+  font-size: clamp(2.5rem, 7vw, 4rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.inner-page__lead {
+  margin: 0;
+  max-width: 38rem;
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--bloom-ink) 78%, transparent);
+}
+
+.inner-section {
+  position: relative;
+  z-index: 10;
+}
+
+.inner-section--mist {
+  background: var(--bloom-mist);
+  color: var(--bloom-ink);
+}
+
+.inner-section--surface {
+  background: linear-gradient(160deg, #d4d0db 0%, #c3bdcd 55%, #b3acbc 100%);
+  color: var(--bloom-ink);
+}
+
+.inner-section__inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 6vw, 5rem);
+}
+
+.inner-section__head {
+  max-width: 42rem;
+  margin: 0 auto clamp(2rem, 5vw, 3.25rem);
+  text-align: center;
+}
+
+.inner-section__eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: "Rajdhani", "Segoe UI", ui-sans-serif, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.inner-section__title {
+  margin: 0 0 1rem;
+  font-family: "Rajdhani", "Segoe UI", ui-sans-serif, sans-serif;
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.inner-section__lead {
+  margin: 0;
+  font-size: clamp(0.98rem, 2vw, 1.12rem);
+  line-height: 1.6;
+  opacity: 0.88;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.feature-card {
+  padding: clamp(1.5rem, 3vw, 2.1rem);
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--bloom-surface) 50%, #ffffff);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 16px 40px rgba(65, 53, 70, 0.12);
+}
+
+.feature-card__title {
+  margin: 0 0 0.6rem;
+  font-family: "Rajdhani", "Segoe UI", ui-sans-serif, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.feature-card__text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  opacity: 0.82;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.inner-cta {
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.inner-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.inner-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.8rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--bloom-ink);
+  color: #f8f6fa;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inner-cta__btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 10px 28px rgba(65, 53, 70, 0.25);
+}
+
+.inner-cta__link {
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.inner-cta__link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .inner-page__hero {
+    min-height: clamp(16rem, 48vh, 24rem);
+  }
 }
 
 /* ---------- Site footer ---------- */

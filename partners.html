@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-title="page.title.partners">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,36 +24,129 @@
       <nav class="site-nav liquid-glass" aria-label="Site">
         <ul class="site-nav__list">
           <li class="site-nav__item site-nav__item--has-menu">
-            <button class="site-nav__link site-nav__toggle" type="button" aria-expanded="false" aria-haspopup="true">
-              Products
+            <button
+              class="site-nav__link site-nav__toggle"
+              type="button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              data-scroll-href="index.html#bento-showcase"
+            >
+              <span data-i18n="nav.products">Products</span>
               <svg class="site-nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
             <ul class="site-nav__dropdown liquid-glass">
-              <li><a href="#">Intellectum</a></li>
-              <li><a href="#">Nodi</a></li>
-              <li><a href="#">IoT Board</a></li>
-              <li><a href="#">School Equipments</a></li>
+              <li><a href="index.html#bento-showcase" data-i18n="nav.intellectum">Intellectum</a></li>
+              <li><a href="index.html#bento-showcase" data-i18n="nav.nodi">Nodi</a></li>
+              <li><a href="index.html#bento-showcase" data-i18n="nav.iot">IoT Board</a></li>
+              <li><a href="index.html#bento-showcase" data-i18n="nav.equipment">School Equipments</a></li>
             </ul>
           </li>
-          <li><a class="site-nav__link" href="partners.html">For Partners</a></li>
-          <li><a class="site-nav__link" href="about.html">About us</a></li>
+          <li><a class="site-nav__link" href="partners.html" data-i18n="nav.partners">For Partners</a></li>
+          <li><a class="site-nav__link" href="about.html" data-i18n="nav.about">About us</a></li>
         </ul>
       </nav>
     </div>
 
-    <main class="page-stub">
-      <div class="page-stub__bg" aria-hidden="true"></div>
-      <div class="page-stub__inner">
-        <p class="page-stub__eyebrow">Partners</p>
-        <h1 class="page-stub__title">For Partners</h1>
-        <p class="page-stub__lead">
-          This page is coming soon. Partnership programs, integration resources, and co-marketing
-          opportunities will be published here.
-        </p>
-        <a class="page-stub__cta" href="index.html">Back to Home</a>
+    <div class="inner-actions liquid-glass">
+      <div class="site-lang" role="group" data-i18n-aria-label="lang.group" aria-label="Language">
+        <button type="button" class="site-lang__btn" data-lang="kaz" aria-pressed="false">KAZ</button>
+        <button type="button" class="site-lang__btn" data-lang="eng" aria-pressed="false">ENG</button>
       </div>
+    </div>
+
+    <main class="inner-page">
+      <section class="inner-page__hero" aria-labelledby="partners-hero-title">
+        <div class="inner-page__hero-inner">
+          <p class="inner-page__eyebrow" data-i18n="partners.hero.eyebrow">Partners</p>
+          <h1 class="inner-page__title" id="partners-hero-title" data-i18n="partners.hero.title">For Partners</h1>
+          <p class="inner-page__lead" data-i18n="partners.hero.lead">
+            Grow with us. Join a network advancing educational technology across schools, kindergartens,
+            and STEM programs.
+          </p>
+        </div>
+      </section>
+
+      <section class="inner-section inner-section--mist" aria-labelledby="partners-benefits-title">
+        <div class="inner-section__inner">
+          <div class="inner-section__head">
+            <p class="inner-section__eyebrow" data-i18n="partners.benefits.eyebrow">Why partner</p>
+            <h2 class="inner-section__title" id="partners-benefits-title" data-i18n="partners.benefits.title">What you get</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.benefits.1.title">Marketing support</h3>
+              <p class="feature-card__text" data-i18n="partners.benefits.1.text">
+                Co-branded campaigns and ready-to-use materials to reach your market.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.benefits.2.title">Training</h3>
+              <p class="feature-card__text" data-i18n="partners.benefits.2.text">
+                Onboarding and product training for your team and your customers.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.benefits.3.title">Full product portfolio</h3>
+              <p class="feature-card__text" data-i18n="partners.benefits.3.text">
+                Access to Intellectum, Nodi, Pasco, and classroom equipment lines.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.benefits.4.title">Technical assistance</h3>
+              <p class="feature-card__text" data-i18n="partners.benefits.4.text">
+                Hands-on help with setup, integration, and after-sales support.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="inner-section inner-section--surface" aria-labelledby="partners-types-title">
+        <div class="inner-section__inner">
+          <div class="inner-section__head">
+            <p class="inner-section__eyebrow" data-i18n="partners.types.eyebrow">Who we work with</p>
+            <h2 class="inner-section__title" id="partners-types-title" data-i18n="partners.types.title">Partnership types</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.types.1.title">Schools</h3>
+              <p class="feature-card__text" data-i18n="partners.types.1.text">
+                Bring our solutions directly into your classrooms with full onboarding.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.types.2.title">Resellers</h3>
+              <p class="feature-card__text" data-i18n="partners.types.2.text">
+                Resell our product lines with competitive terms and marketing support.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3 class="feature-card__title" data-i18n="partners.types.3.title">Integrators</h3>
+              <p class="feature-card__text" data-i18n="partners.types.3.text">
+                Deliver complete STEM and EdTech projects backed by our catalog.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="inner-section inner-section--mist" aria-labelledby="partners-cta-title">
+        <div class="inner-section__inner">
+          <div class="inner-cta">
+            <p class="inner-section__eyebrow" data-i18n="partners.cta.eyebrow">Become a partner</p>
+            <h2 class="inner-section__title" id="partners-cta-title" data-i18n="partners.cta.title">Let's build together</h2>
+            <p class="inner-section__lead" data-i18n="partners.cta.lead">
+              Tell us about your goals and we'll find the right partnership model.
+            </p>
+            <div class="inner-cta__actions">
+              <a class="inner-cta__btn" href="mailto:info@eduvector.kz" data-i18n="partners.cta.button">Become a partner</a>
+              <a class="inner-cta__link" href="tel:+77716080076">+7 771 608 0076</a>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer" aria-labelledby="site-footer-title">
@@ -65,47 +158,50 @@
             </span>
             <span class="brand-text">EduVector Distribution</span>
           </a>
-          <p class="site-footer__tagline">
+          <p class="site-footer__tagline" data-i18n="footer.tagline">
             Educational technology for schools, kindergartens, and STEM classrooms worldwide.
           </p>
         </div>
         <nav class="site-footer__nav" aria-label="Footer products">
-          <h2 class="site-footer__heading" id="site-footer-title">Products</h2>
+          <h2 class="site-footer__heading" id="site-footer-title" data-i18n="footer.products">Products</h2>
           <ul class="site-footer__list">
-            <li><a href="#">Intellectum</a></li>
-            <li><a href="#">Nodi</a></li>
-            <li><a href="#">IoT Board</a></li>
-            <li><a href="#">School Equipments</a></li>
+            <li><a href="index.html#bento-showcase" data-i18n="nav.intellectum">Intellectum</a></li>
+            <li><a href="index.html#bento-showcase" data-i18n="nav.nodi">Nodi</a></li>
+            <li><a href="index.html#bento-showcase" data-i18n="nav.iot">IoT Board</a></li>
+            <li><a href="index.html#bento-showcase" data-i18n="nav.equipment">School Equipments</a></li>
           </ul>
         </nav>
         <nav class="site-footer__nav" aria-label="Footer company">
-          <h2 class="site-footer__heading">Company</h2>
+          <h2 class="site-footer__heading" data-i18n="footer.company">Company</h2>
           <ul class="site-footer__list">
-            <li><a href="partners.html">For Partners</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="index.html#bento-showcase">Product categories</a></li>
+            <li><a href="partners.html" data-i18n="nav.partners">For Partners</a></li>
+            <li><a href="about.html" data-i18n="nav.about">About us</a></li>
+            <li><a href="index.html#bento-showcase" data-i18n="footer.categories">Product categories</a></li>
           </ul>
         </nav>
         <div class="site-footer__contact">
-          <h2 class="site-footer__heading">Contact</h2>
+          <h2 class="site-footer__heading" data-i18n="footer.contact">Contact</h2>
           <p class="site-footer__contact-line">
             <a href="tel:+77716080076">+7 771 608 0076</a>
           </p>
           <p class="site-footer__contact-line">
             <a href="mailto:info@eduvector.kz">info@eduvector.kz</a>
           </p>
-          <p class="site-footer__contact-line">
+          <p class="site-footer__contact-line" data-i18n="footer.location">
             Kazakhstan, Astana, Rakhymzhan Koshkarbayev Ave. 1/4, 3rd floor
           </p>
         </div>
       </div>
       <div class="site-footer__bar">
-        <p class="site-footer__copyright">© 2026 EduVector Distribution. All rights reserved.</p>
+        <p class="site-footer__copyright" data-i18n="footer.copyright">© 2026 EduVector Distribution. All rights reserved.</p>
         <ul class="site-footer__legal">
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+          <li><a href="#" data-i18n="footer.terms">Terms of Use</a></li>
         </ul>
       </div>
     </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>

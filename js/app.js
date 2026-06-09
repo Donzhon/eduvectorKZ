@@ -62,20 +62,25 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-/* ---------- Site nav Products: scroll to second page block ---------- */
+/* ---------- Site nav Products: scroll or go to products block ---------- */
+const PRODUCTS_SCROLL_TARGET = "bento-showcase";
 const productsNavToggle = document.querySelector(".site-nav__toggle");
-const productsScrollSection = document.getElementById(
-  productsNavToggle?.dataset.scrollTo || "learning-labs"
-);
+const productsScrollTargetId =
+  productsNavToggle?.dataset.scrollTo || PRODUCTS_SCROLL_TARGET;
+const productsScrollSection = document.getElementById(productsScrollTargetId);
+const productsScrollHref =
+  productsNavToggle?.dataset.scrollHref || `index.html#${productsScrollTargetId}`;
 
 productsNavToggle?.addEventListener("click", (event) => {
-  if (!productsScrollSection) {
+  event.preventDefault();
+  productsNavToggle.setAttribute("aria-expanded", "false");
+
+  if (productsScrollSection) {
+    productsScrollSection.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
 
-  event.preventDefault();
-  productsNavToggle.setAttribute("aria-expanded", "false");
-  productsScrollSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.location.assign(productsScrollHref);
 });
 
 const NODI_INTRO_VIDEO = "assets/video/nodi-in.mp4";
@@ -196,7 +201,7 @@ const tryPlay = (layer) => {
 
   if (playPromise !== undefined) {
     playPromise.catch(() => {
-      // Autoplay may be blocked until user interaction; fallback gradient remains visible.
+      // Autoplay may be blocked until user interaction; hero overlay remains visible.
     });
   }
 };
