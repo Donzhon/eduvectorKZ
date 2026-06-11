@@ -112,10 +112,25 @@ productsNavToggle?.addEventListener("click", (event) => {
   window.location.assign(productsScrollHref);
 });
 
-const NODI_INTRO_VIDEO = "assets/video/nodi-in.mp4";
-const NODI_LOOP_VIDEO = "assets/video/nodi-main.mp4";
-const NODI_EXIT_VIDEO = "assets/video/nodi-intellectum.mp4";
+const DESKTOP_NODI_INTRO_VIDEO = "assets/video/nodi-in.mp4";
+const DESKTOP_NODI_LOOP_VIDEO = "assets/video/nodi-main.mp4";
+const DESKTOP_NODI_EXIT_VIDEO = "assets/video/nodi-intellectum.mp4";
+const MOBILE_NODI_INTRO_VIDEO = "assets/video/mobile/nodi-in.mp4";
+const MOBILE_NODI_LOOP_VIDEO = "assets/video/mobile/nodi-main.mp4";
+const MOBILE_NODI_EXIT_VIDEO = "assets/video/mobile/nodi-intellectum.mp4";
 const INTELLECTUM_MAIN_IMAGE = "assets/video/intellectum.jpg";
+const mobileBackgroundQuery = window.matchMedia?.("(max-width: 720px)");
+const useMobileBackgroundSources = mobileBackgroundQuery?.matches ?? false;
+const pickBackgroundVideo = (desktopSrc, mobileSrc) =>
+  useMobileBackgroundSources ? mobileSrc : desktopSrc;
+const NODI_INTRO_VIDEO = pickBackgroundVideo(DESKTOP_NODI_INTRO_VIDEO, MOBILE_NODI_INTRO_VIDEO);
+const NODI_LOOP_VIDEO = pickBackgroundVideo(DESKTOP_NODI_LOOP_VIDEO, MOBILE_NODI_LOOP_VIDEO);
+const NODI_EXIT_VIDEO = pickBackgroundVideo(DESKTOP_NODI_EXIT_VIDEO, MOBILE_NODI_EXIT_VIDEO);
+const responsiveBackgroundFallbacks = new Map([
+  [MOBILE_NODI_INTRO_VIDEO, DESKTOP_NODI_INTRO_VIDEO],
+  [MOBILE_NODI_LOOP_VIDEO, DESKTOP_NODI_LOOP_VIDEO],
+  [MOBILE_NODI_EXIT_VIDEO, DESKTOP_NODI_EXIT_VIDEO],
+]);
 
 const videoLayers = Array.from(document.querySelectorAll(".bg-video"));
 const heroBackgroundStage = document.querySelector(".hero-stage");
@@ -275,6 +290,11 @@ const mediaSrcMatches = (media, src) => {
 };
 
 const layerSrcMatches = (layer, src) => mediaSrcMatches(layer, src);
+const backgroundSrcMatches = (actualSrc, expectedSrc) =>
+  actualSrc === expectedSrc || responsiveBackgroundFallbacks.get(expectedSrc) === actualSrc;
+const backgroundLayerSrcMatches = (layer, expectedSrc) =>
+  layerSrcMatches(layer, expectedSrc) ||
+  layerSrcMatches(layer, responsiveBackgroundFallbacks.get(expectedSrc));
 
 const pauseAllVideoLayers = () => {
   videoLayers.forEach((layer) => layer.pause());
@@ -473,7 +493,7 @@ const crossfadeToImage = (nextSrc) => {
     })
     .catch(() => {
       isTransitioning = false;
-      handleVideoError();
+      handleVideoError(nextSrc);
     });
 };
 
@@ -496,7 +516,7 @@ const crossfadeFromImageToVideo = (nextSrc) => {
     })
     .catch(() => {
       isTransitioning = false;
-      handleVideoError();
+      handleVideoError(nextSrc);
     });
 };
 
@@ -519,7 +539,7 @@ const crossfadeToVideo = (nextSrc) => {
     })
     .catch(() => {
       isTransitioning = false;
-      handleVideoError();
+      handleVideoError(nextSrc);
     });
 };
 
@@ -546,7 +566,7 @@ const crossfadeToSrc = (nextSrc) => {
         tryPlay(onlyLayer);
         whenFrameReady(onlyLayer, () => maybeStartIntellectumLayout(nextSrc));
       })
-      .catch(handleVideoError)
+      .catch(() => handleVideoError(nextSrc))
       .finally(() => {
         isTransitioning = false;
       });
@@ -592,12 +612,14 @@ const replayBackgroundSrc = (src) => {
   }
 
   const layer = getCurrentVideoLayer();
-  if (!layer || !layerSrcMatches(layer, src)) {
+  if (!layer || !backgroundLayerSrcMatches(layer, src)) {
     playBackgroundSrc(src);
     return;
   }
 
-  currentBackgroundSrc = src;
+  currentBackgroundSrc = layerSrcMatches(layer, src)
+    ? src
+    : responsiveBackgroundFallbacks.get(src) || src;
   layer.currentTime = 0;
   setActiveVideoLayer(layer);
   tryPlay(layer);
@@ -618,8 +640,8 @@ const handleBackgroundEnded = () => {
   if (galleryActiveIndex === 0) {
     const visibleLayer = getCurrentVideoLayer();
     const onIntro =
-      currentBackgroundSrc === NODI_INTRO_VIDEO ||
-      (visibleLayer && layerSrcMatches(visibleLayer, NODI_INTRO_VIDEO));
+      backgroundSrcMatches(currentBackgroundSrc, NODI_INTRO_VIDEO) ||
+      (visibleLayer && backgroundLayerSrcMatches(visibleLayer, NODI_INTRO_VIDEO));
 
     if (onIntro) {
       playBackgroundSrc(NODI_LOOP_VIDEO);
@@ -627,8 +649,8 @@ const handleBackgroundEnded = () => {
     }
 
     if (
-      currentBackgroundSrc === NODI_LOOP_VIDEO ||
-      (visibleLayer && layerSrcMatches(visibleLayer, NODI_LOOP_VIDEO))
+      backgroundSrcMatches(currentBackgroundSrc, NODI_LOOP_VIDEO) ||
+      (visibleLayer && backgroundLayerSrcMatches(visibleLayer, NODI_LOOP_VIDEO))
     ) {
       replayBackgroundSrc(NODI_LOOP_VIDEO);
     }
@@ -667,7 +689,21 @@ const onGalleryProductChange = (prevIndex, nextIndex) => {
   }
 };
 
-const handleVideoError = () => {
+const handleVideoError = (failedSrc = currentBackgroundSrc) => {
+  const fallbackSrc = responsiveBackgroundFallbacks.get(failedSrc);
+
+  if (fallbackSrc) {
+    resetBackgroundTransition();
+    videoAfterEndSrc = null;
+    if (fallbackSrc === currentBackgroundSrc) {
+      replayBackgroundSrc(fallbackSrc);
+    } else {
+      playBackgroundSrc(fallbackSrc, { force: true });
+    }
+    schedulePreloadBackgroundSrc(fallbackSrc);
+    return;
+  }
+
   failedAttempts += 1;
 
   if (failedAttempts >= 6) {
@@ -682,7 +718,7 @@ const handleVideoError = () => {
   }
 
   if (galleryActiveIndex === 0) {
-    if (currentBackgroundSrc === NODI_INTRO_VIDEO) {
+    if (backgroundSrcMatches(currentBackgroundSrc, NODI_INTRO_VIDEO)) {
       playBackgroundSrc(NODI_LOOP_VIDEO);
     } else {
       replayBackgroundSrc(NODI_LOOP_VIDEO);
@@ -737,7 +773,7 @@ if (videoLayers.length > 0 && (bgCtx || useNativeTouchVideo)) {
       schedulePreloadBackgroundSrc(NODI_LOOP_VIDEO);
       schedulePreloadBackgroundSrc(INTELLECTUM_MAIN_IMAGE);
     })
-    .catch(handleVideoError);
+    .catch(() => handleVideoError(NODI_INTRO_VIDEO));
 
   if (!useNativeTouchVideo) {
     requestAnimationFrame(renderFrame);

@@ -48,7 +48,7 @@
         }
       })();
     </script>
-    <link rel="preload" as="video" href="assets/video/nodi-in.mp4" />
+    <link rel="preload" as="video" href="assets/video/nodi-in.mp4" media="(min-width: 721px)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -79,6 +79,12 @@
               aria-haspopup="true"
               data-scroll-to="bento-showcase"
             >
+              <svg class="site-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+              </svg>
               <span data-i18n="nav.products">Products</span>
               <svg class="site-nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9" />
@@ -91,8 +97,27 @@
               <li><a href="#" data-i18n="nav.equipment">School Equipments</a></li>
             </ul>
           </li>
-          <li><a class="site-nav__link" href="/partners" data-i18n="nav.partners">For Partners</a></li>
-          <li><a class="site-nav__link" href="/about" data-i18n="nav.about">About us</a></li>
+          <li>
+            <a class="site-nav__link" href="/partners" data-i18n-aria-label="nav.partners" aria-label="For Partners">
+              <svg class="site-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
+                <circle cx="12" cy="7" r="4" />
+                <path d="M3 21v-2a4 4 0 0 1 3-3.87" />
+                <path d="M21 21v-2a4 4 0 0 0-3-3.87" />
+              </svg>
+              <span data-i18n="nav.partners">For Partners</span>
+            </a>
+          </li>
+          <li>
+            <a class="site-nav__link" href="/about" data-i18n-aria-label="nav.about" aria-label="About us">
+              <svg class="site-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <span data-i18n="nav.about">About us</span>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -384,7 +409,7 @@
                   </span>
                 </label>
               </div>
-              <label class="lead-form__field">
+              <label class="lead-form__field lead-form__field--comment">
                 <span class="lead-form__control lead-form__control--area liquid-glass">
                   <textarea
                     name="comment"
