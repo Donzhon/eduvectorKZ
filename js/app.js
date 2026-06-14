@@ -31,7 +31,7 @@ const menuPill = document.querySelector(".menu-pill");
 const navMenu = document.getElementById("nav-menu");
 const siteActionsMenuHost = navMenu?.closest(".site-actions");
 
-const MOBILE_NAV_MENU_MQ = window.matchMedia("(max-width: 960px)");
+const MOBILE_NAV_MENU_MQ = window.matchMedia("(max-width: 720px)");
 
 let navMenuPortalAnchor = null;
 
@@ -175,6 +175,11 @@ menuPill?.addEventListener("click", (event) => {
   event.stopPropagation();
   const isOpen = menuPill.getAttribute("aria-expanded") === "true";
   setNavMenuOpen(!isOpen);
+});
+
+navMenu?.querySelector(".nav-menu__close")?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  setNavMenuOpen(false);
 });
 
 document.addEventListener("click", (event) => {
