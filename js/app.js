@@ -992,6 +992,7 @@ const siteChrome = document.querySelector(".site-chrome");
 const siteBrand = document.querySelector(".site-brand");
 const siteNav = document.querySelector(".site-nav");
 const siteActions = document.querySelector(".site-actions");
+const innerActions = document.querySelector(".inner-actions");
 const productGallery = document.querySelector(".product-gallery");
 const presetSelect = document.getElementById("settings-preset");
 const blurRange = document.getElementById("left-glass-blur");
@@ -1154,7 +1155,7 @@ const applyLeftGlassSettings = (settings) => {
     settings.blur * 0.5
   )}%)`;
 
-  [leftContent, siteChrome, siteBrand, siteNav, siteActions, productGallery].forEach((el) => {
+  [leftContent, siteChrome, siteBrand, siteNav, siteActions, innerActions, productGallery].forEach((el) => {
     if (!el) {
       return;
     }
@@ -1296,24 +1297,48 @@ const bindColorControl = (colorInput, hexInput, applyColor) => {
   });
 };
 
-if (leftContent && blurRange && shadowRange && overlayRange && panelDimRange && leadFieldOpacityRange) {
-  let presets = migrateLegacySettings(readPresetsFromStorage());
+const hasGlassChrome = Boolean(siteChrome || siteBrand || siteNav || siteActions || innerActions);
+const hasGlassTuner =
+  leftContent && blurRange && shadowRange && overlayRange && panelDimRange && leadFieldOpacityRange;
+
+let glassPresets = null;
+let glassActivePresetId = DEFAULT_PRESET_ID;
+let glassSettings = normalizeSettings({}, BUILTIN_PRESETS[DEFAULT_PRESET_ID]);
+
+const loadGlassSettings = () => {
+  glassPresets = migrateLegacySettings(readPresetsFromStorage());
 
   if (!localStorage.getItem(PRESETS_STORAGE_KEY)) {
-    writePresetsToStorage(presets);
+    writePresetsToStorage(glassPresets);
   }
 
-  let activePresetId = getActivePresetId(presets);
-  let settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS[DEFAULT_PRESET_ID]);
+  glassActivePresetId = getActivePresetId(glassPresets);
+  glassSettings = normalizeSettings(
+    glassPresets[glassActivePresetId],
+    BUILTIN_PRESETS[DEFAULT_PRESET_ID]
+  );
 
   if (!localStorage.getItem(ACTIVE_PRESET_KEY)) {
     localStorage.setItem(ACTIVE_PRESET_KEY, DEFAULT_PRESET_ID);
-    activePresetId = DEFAULT_PRESET_ID;
-    settings = normalizeSettings(presets[activePresetId], BUILTIN_PRESETS[DEFAULT_PRESET_ID]);
+    glassActivePresetId = DEFAULT_PRESET_ID;
+    glassSettings = normalizeSettings(
+      glassPresets[glassActivePresetId],
+      BUILTIN_PRESETS[DEFAULT_PRESET_ID]
+    );
   }
+};
+
+if (hasGlassChrome || hasGlassTuner) {
+  loadGlassSettings();
+  applyLeftGlassSettings(glassSettings);
+}
+
+if (hasGlassTuner) {
+  const presets = glassPresets;
+  let activePresetId = glassActivePresetId;
+  let settings = glassSettings;
 
   fillPresetSelect(presets, activePresetId);
-  applyLeftGlassSettings(settings);
 
   presetSelect?.addEventListener("change", () => {
     activePresetId = presetSelect.value;
@@ -1882,10 +1907,14 @@ const updateSiteScrollUi = () => {
     productGallery.classList.toggle("is-hidden", pastThreshold);
   }
 
-  if (siteChrome && navMergeMode !== "always") {
+  if (siteChrome && navMergeMode === "auto") {
     document.body.classList.toggle("is-nav-merged", pastThreshold);
   }
 };
+
+if (siteChrome && navMergeMode === "never") {
+  document.body.classList.remove("is-nav-merged");
+}
 
 let siteScrollTicking = false;
 
@@ -1895,7 +1924,7 @@ window.addEventListener("orientationchange", () => {
   updateSiteScrollUi();
 });
 
-if (siteChrome && navMergeMode !== "always") {
+if (siteChrome && navMergeMode === "auto") {
   window.addEventListener(
     "scroll",
     () => {
