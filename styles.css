@@ -2544,56 +2544,60 @@ html.is-boot-loading .lead-form__select-menu {
 
 @media (max-width: 960px) {
   html.is-nav-menu-open .site-actions {
-    z-index: 522;
+    z-index: 1001;
   }
 
-  .site-actions .nav-menu {
+  .nav-menu.nav-menu--overlay {
     position: fixed;
-    z-index: 521;
-    top: max(0.65rem, env(safe-area-inset-top)) !important;
-    right: var(--panel-edge-gap) !important;
-    bottom: max(0.65rem, env(safe-area-inset-bottom)) !important;
-    left: var(--panel-edge-gap) !important;
-    width: calc(100vw - var(--panel-edge-gap) * 2) !important;
+    z-index: 1000;
+    display: flex !important;
+    flex-direction: column;
+    top: max(0.65rem, env(safe-area-inset-top));
+    right: var(--panel-edge-gap);
+    bottom: max(0.65rem, env(safe-area-inset-bottom));
+    left: var(--panel-edge-gap);
+    width: calc(100vw - var(--panel-edge-gap) * 2);
     min-width: 0;
     max-width: none;
-    max-height: none !important;
-    height: auto;
+    min-height: 12rem;
+    max-height: none;
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .site-actions .nav-menu.liquid-glass {
+  .nav-menu.nav-menu--overlay.liquid-glass {
     overflow-x: hidden;
     overflow-y: auto;
   }
 
-  .site-actions .nav-menu .glass-tuner {
+  .nav-menu.nav-menu--overlay .glass-tuner {
     flex: 0 0 auto;
     max-height: none;
     overflow: visible;
   }
 
-  .site-actions .nav-menu .glass-tuner__control,
-  .site-actions .nav-menu__tuner .glass-tuner__control {
+  .nav-menu.nav-menu--overlay .glass-tuner__control,
+  .nav-menu.nav-menu--overlay .nav-menu__tuner .glass-tuner__control {
     min-width: 0;
   }
 
-  .site-actions .nav-menu .glass-tuner__row {
+  .nav-menu.nav-menu--overlay .glass-tuner__row {
     flex-wrap: wrap;
     gap: 0.35rem 0.65rem;
   }
 
-  .site-actions .nav-menu .glass-tuner__value {
+  .nav-menu.nav-menu--overlay .glass-tuner__value {
     flex: 1 1 100%;
     width: 100%;
     min-width: 0;
     text-align: left;
   }
 
-  .site-actions .nav-menu .glass-tuner__select,
-  .site-actions .nav-menu .glass-tuner__hex {
+  .nav-menu.nav-menu--overlay .glass-tuner__select,
+  .nav-menu.nav-menu--overlay .glass-tuner__hex {
     width: 100%;
     box-sizing: border-box;
   }
