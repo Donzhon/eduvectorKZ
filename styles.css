@@ -1,5 +1,6 @@
 .bloom-page {
   --panel-edge-gap: clamp(2rem, 5vw, 4.5rem);
+  --chrome-actions-reserve: 11rem;
   --video-overlay-strength: 0;
   --bloom-ink: #413546;
   --bloom-surface: #cac6d2;
@@ -24,6 +25,10 @@
   color: var(--text-100);
   background: #000;
   overflow-x: hidden;
+}
+
+.bloom-page:has(.inner-actions) {
+  --chrome-actions-reserve: 6.25rem;
 }
 
 .bloom-page *,
@@ -1429,11 +1434,27 @@ html.is-boot-loading .lead-form__select-menu {
   pointer-events: auto;
 }
 
-/* Hero state: brand left edge aligned with hero headline */
+/* Hero state: brand (left) + nav (center) in one row, actions reserved on the right */
+.bloom-page:not(.is-nav-merged) .site-chrome {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: var(--panel-edge-gap);
+  padding-right: calc(var(--chrome-actions-reserve) + var(--panel-edge-gap));
+}
+
 .bloom-page:not(.is-nav-merged) .site-brand {
-  position: absolute;
-  top: 0;
-  left: var(--panel-edge-gap);
+  position: static;
+  top: auto;
+  left: auto;
+  flex: 0 0 auto;
+}
+
+.bloom-page:not(.is-nav-merged) .site-nav {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  justify-content: center;
 }
 
 /* Merged state: one shared glass bar (chrome), brand + nav inside */
@@ -1986,14 +2007,8 @@ html.is-boot-loading .lead-form__select-menu {
 }
 
 @media (max-width: 720px) {
-  .site-chrome {
-    gap: 0.3rem;
-    padding: 0;
-  }
-
   .site-nav {
     gap: 0.2rem;
-    padding: 0.35rem 0.4rem;
     font-size: 0.8rem;
   }
 
@@ -2003,26 +2018,6 @@ html.is-boot-loading .lead-form__select-menu {
   }
 
   .site-nav__list::-webkit-scrollbar {
-    display: none;
-  }
-
-  .site-nav__link {
-    padding: 0.4rem 0.6rem;
-  }
-
-  .site-brand {
-    padding: 0.25rem 0.55rem 0.25rem 0.35rem;
-  }
-
-  .site-brand .brand-text {
-    font-size: 0.95rem;
-  }
-
-  .bloom-page:not(.is-nav-merged) .site-brand {
-    left: var(--panel-edge-gap);
-  }
-
-  .bloom-page:not(.is-nav-merged) .site-brand .brand-text {
     display: none;
   }
 }
@@ -2607,12 +2602,17 @@ html.is-boot-loading .lead-form__select-menu {
 @media (max-width: 720px) {
   .bloom-page {
     --panel-edge-gap: clamp(0.85rem, 4vw, 1.25rem);
+    --chrome-actions-reserve: 10.75rem;
     --mobile-tap-size: 2.25rem;
     --mobile-icon-size: 1.05rem;
   }
 
+  .bloom-page:has(.inner-actions) {
+    --chrome-actions-reserve: 5.5rem;
+  }
+
   .hero-stage {
-    --site-actions-reserve: 10.75rem;
+    --site-actions-reserve: var(--chrome-actions-reserve);
     min-height: 100svh;
     height: 100svh;
   }
@@ -2621,16 +2621,19 @@ html.is-boot-loading .lead-form__select-menu {
     top: max(0.65rem, env(safe-area-inset-top));
     left: 0;
     right: 0;
+    align-items: center;
     justify-content: flex-start;
     width: 100%;
     max-width: none;
     gap: 0.35rem;
     padding-left: var(--panel-edge-gap);
+    padding-right: calc(var(--chrome-actions-reserve) + var(--panel-edge-gap));
   }
 
   .bloom-page:not(.is-nav-merged) .site-brand,
   .bloom-page.is-nav-merged .site-brand {
     position: static;
+    flex: 0 0 auto;
     z-index: 2;
     min-height: var(--mobile-tap-size);
     padding: 0.25rem 0.55rem;
@@ -2656,13 +2659,15 @@ html.is-boot-loading .lead-form__select-menu {
   }
 
   .bloom-page.is-nav-merged .site-chrome {
-    left: 50%;
-    right: auto;
+    left: 0;
+    right: 0;
     width: auto;
-    max-width: calc(100vw - var(--panel-edge-gap) * 2);
-    transform: translateX(-50%);
+    max-width: none;
+    transform: none;
     gap: 0.35rem;
-    padding: 0;
+    padding-left: var(--panel-edge-gap);
+    padding-right: calc(var(--chrome-actions-reserve) + var(--panel-edge-gap));
+    justify-content: flex-start;
     overflow: visible;
     background: transparent;
     backdrop-filter: none;
@@ -2677,12 +2682,15 @@ html.is-boot-loading .lead-form__select-menu {
 
   .site-nav,
   .bloom-page.is-nav-merged .site-nav {
-    position: absolute;
-    left: 50%;
+    position: static;
+    flex: 1 1 0;
+    min-width: 0;
+    left: auto;
     z-index: 1;
-    transform: translateX(-50%);
+    transform: none;
+    justify-content: center;
+    max-width: 100%;
     min-height: var(--mobile-tap-size);
-    max-width: calc(100vw - var(--panel-edge-gap) * 2 - 6.5rem);
     padding: 0.3rem 0.35rem;
     border-radius: 999px;
     background: color-mix(
@@ -2699,11 +2707,6 @@ html.is-boot-loading .lead-form__select-menu {
   }
 
   .bloom-page.is-nav-merged .site-nav {
-    position: static;
-    left: auto;
-    z-index: auto;
-    transform: none;
-    max-width: none;
     background: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -2754,12 +2757,20 @@ html.is-boot-loading .lead-form__select-menu {
   }
 
   .site-actions {
+    position: fixed;
     top: max(0.65rem, env(safe-area-inset-top));
     right: var(--panel-edge-gap);
     min-height: var(--mobile-tap-size);
     padding: 0.25rem 0.3rem;
     gap: 0.1rem;
     z-index: 30;
+  }
+
+  .inner-actions {
+    top: max(0.65rem, env(safe-area-inset-top));
+    right: var(--panel-edge-gap);
+    min-height: var(--mobile-tap-size);
+    padding: 0.25rem 0.3rem;
   }
 
   .site-actions__btn,
