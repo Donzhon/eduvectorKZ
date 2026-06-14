@@ -468,38 +468,92 @@
       </div>
     </div>
 
-    <section id="bento-showcase" class="bento-showcase" aria-label="Featured highlights">
+    <section
+      id="bento-showcase"
+      class="bento-showcase bento-showcase--app-grid"
+      aria-label="Featured highlights"
+    >
+      <div class="bento-showcase__header">
+        <div class="bento-showcase__intro">
+          <p class="bento-showcase__eyebrow" data-i18n="categories.eyebrow">Products</p>
+          <h2 class="bento-showcase__title" data-i18n="categories.title">Product categories</h2>
+        </div>
+        <div class="bento-showcase__mode-toggle" role="group" data-i18n-aria-label="gallery.products" aria-label="Products">
+          <button
+            type="button"
+            class="bento-showcase__mode-btn is-active"
+            data-bento-mode="app-grid"
+            aria-pressed="true"
+            data-i18n="categories.view.grid"
+          >
+            Grid
+          </button>
+          <button
+            type="button"
+            class="bento-showcase__mode-btn"
+            data-bento-mode="product-list"
+            aria-pressed="false"
+            data-i18n="categories.view.list"
+          >
+            List
+          </button>
+        </div>
+      </div>
       <div class="bento-showcase__grid">
         <a class="bento-showcase__cell bento-showcase__cell--a" href="#" data-i18n-aria-label="categories.cta" aria-label="Learn More">
-          <img
-            class="bento-showcase__img"
-            src="assets/intellectum_25-24.png"
-            alt="Intellectum"
-            data-i18n-alt="categories.intellectum.title"
-          />
+          <div class="bento-showcase__media">
+            <img
+              class="bento-showcase__img"
+              src="assets/intellectum_25-24.png"
+              alt="Intellectum"
+              data-i18n-alt="categories.intellectum.title"
+            />
+          </div>
+          <div class="bento-showcase__body">
+            <span class="bento-showcase__name" data-i18n="categories.intellectum.title">Intellectum</span>
+            <span class="bento-showcase__desc" data-i18n="categories.intellectum.desc">A developmental methodology for kindergartens.</span>
+            <span class="bento-showcase__cta" data-i18n="categories.cta">Learn More ></span>
+          </div>
         </a>
         <a class="bento-showcase__cell bento-showcase__cell--b" href="#">
-          <img
-            class="bento-showcase__img"
-            src="assets/neyri_25-16.png"
-            alt="Neyri"
-          />
+          <div class="bento-showcase__media">
+            <img class="bento-showcase__img" src="assets/neyri_25-16.png" alt="Neyri" data-i18n-alt="categories.neyri.title" />
+          </div>
+          <div class="bento-showcase__body">
+            <span class="bento-showcase__name" data-i18n="categories.neyri.title">Neyri</span>
+            <span class="bento-showcase__desc" data-i18n="categories.neyri.desc">Smart learning companion for guided classroom activities.</span>
+            <span class="bento-showcase__cta" data-i18n="categories.cta">Learn More ></span>
+          </div>
         </a>
         <a class="bento-showcase__cell bento-showcase__cell--c" href="#" data-i18n-aria-label="categories.cta" aria-label="Learn More">
-          <img
-            class="bento-showcase__img"
-            src="assets/nodi_25-24.png"
-            alt="Nodi Ecosystem"
-            data-i18n-alt="categories.nodi.title"
-          />
+          <div class="bento-showcase__media">
+            <img
+              class="bento-showcase__img"
+              src="assets/nodi_25-24.png"
+              alt="Nodi Ecosystem"
+              data-i18n-alt="categories.nodi.title"
+            />
+          </div>
+          <div class="bento-showcase__body">
+            <span class="bento-showcase__name" data-i18n="categories.nodi.title">Nodi Ecosystem</span>
+            <span class="bento-showcase__desc" data-i18n="categories.nodi.desc">Educational robotics and STEM learning.</span>
+            <span class="bento-showcase__cta" data-i18n="categories.cta">Learn More ></span>
+          </div>
         </a>
         <a class="bento-showcase__cell bento-showcase__cell--d" href="#">
-          <img
-            class="bento-showcase__img"
-            src="assets/labo_25-16.png"
-            alt="School Equipments"
-            data-i18n-alt="nav.equipment"
-          />
+          <div class="bento-showcase__media">
+            <img
+              class="bento-showcase__img"
+              src="assets/labo_25-16.png"
+              alt="School Equipments"
+              data-i18n-alt="categories.equipment.title"
+            />
+          </div>
+          <div class="bento-showcase__body">
+            <span class="bento-showcase__name" data-i18n="categories.equipment.title">School Equipments</span>
+            <span class="bento-showcase__desc" data-i18n="categories.equipment.desc">Lab tools and classroom hardware for STEM programs.</span>
+            <span class="bento-showcase__cta" data-i18n="categories.cta">Learn More ></span>
+          </div>
         </a>
         <a class="bento-showcase__cell bento-showcase__cell--e" href="#">
           <div class="bento-showcase__media">
@@ -509,6 +563,11 @@
               alt="Pasco"
               data-i18n-alt="categories.pasco.title"
             />
+          </div>
+          <div class="bento-showcase__body">
+            <span class="bento-showcase__name" data-i18n="categories.pasco.title">Pasco</span>
+            <span class="bento-showcase__desc" data-i18n="categories.pasco.desc">Digital measuring instruments.</span>
+            <span class="bento-showcase__cta" data-i18n="categories.cta">Learn More ></span>
           </div>
         </a>
       </div>

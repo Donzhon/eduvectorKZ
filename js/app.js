@@ -1913,3 +1913,30 @@ if (productGallery) {
     });
   }
 }
+
+/* ---------- Bento showcase: mobile layout mode toggle ---------- */
+const bentoShowcase = document.getElementById("bento-showcase");
+const bentoModeButtons = bentoShowcase
+  ? Array.from(bentoShowcase.querySelectorAll("[data-bento-mode]"))
+  : [];
+
+const setBentoShowcaseMode = (mode) => {
+  if (!bentoShowcase || !mode) {
+    return;
+  }
+
+  bentoShowcase.classList.remove("bento-showcase--app-grid", "bento-showcase--product-list");
+  bentoShowcase.classList.add(`bento-showcase--${mode}`);
+
+  bentoModeButtons.forEach((button) => {
+    const isActive = button.dataset.bentoMode === mode;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+};
+
+bentoModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setBentoShowcaseMode(button.dataset.bentoMode);
+  });
+});
