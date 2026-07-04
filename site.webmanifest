@@ -1,0 +1,17 @@
+{
+  "name": "EduVector Distribution — Educational Technology",
+  "short_name": "EduVector",
+  "description": "EduVector Distribution delivers educational technology for schools, kindergartens, and STEM classrooms in Kazakhstan.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3e4193",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "assets/icon/eduvector_favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

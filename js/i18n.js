@@ -1,4 +1,14 @@
-const LANG_STORAGE_KEY = "intellectum-us-lang";
+const LANG_STORAGE_KEY = "eduvector-lang";
+
+(function migrateStorageKey(oldKey, newKey) {
+  try {
+    const value = localStorage.getItem(oldKey);
+    if (value !== null && localStorage.getItem(newKey) === null) {
+      localStorage.setItem(newKey, value);
+    }
+    localStorage.removeItem(oldKey);
+  } catch (_) {}
+})("intellectum-us-lang", LANG_STORAGE_KEY);
 
 const SITE_I18N = {
   eng: {
@@ -55,7 +65,7 @@ const SITE_I18N = {
     "land.teacher.stat2": "Active learners",
     "land.teacher.stat3": "Satisfaction rate",
     "lang.group": "Language",
-    "page.title": "EduVector Distribution",
+    "page.title": "EduVector Distribution — Educational Technology for Schools, Kindergartens & STEM Classrooms",
     "categories.eyebrow": "Products",
     "categories.title": "Product categories",
     "categories.lead": "Three product lines for schools, kindergartens, and STEM classrooms.",
@@ -82,8 +92,8 @@ const SITE_I18N = {
     "footer.copyright": "© 2026 EduVector Distribution. All rights reserved.",
     "footer.privacy": "Privacy Policy",
     "footer.terms": "Terms of Use",
-    "page.title.about": "About us - IntellectumUS",
-    "page.title.partners": "For Partners - IntellectumUS",
+    "page.title.about": "About EduVector Distribution — EdTech for Schools, Kindergartens & STEM Classrooms",
+    "page.title.partners": "Partner with EduVector Distribution — EdTech Reseller & School Programs",
     "about.hero.eyebrow": "Company",
     "about.hero.title": "About us",
     "about.hero.lead":
@@ -188,7 +198,7 @@ const SITE_I18N = {
     "land.teacher.stat2": "Белсенді оқушылар",
     "land.teacher.stat3": "Қанағаттану деңгейі",
     "lang.group": "Тіл",
-    "page.title": "EduVector Distribution",
+    "page.title": "EduVector Distribution — мектептер, балабақшалар және STEM сыныптарына арналған білім беру технологиялары",
     "categories.eyebrow": "Өнімдер",
     "categories.title": "Өнім категориялары",
     "categories.lead": "Мектептерге, балабақшаларға және STEM сыныптарына арналған үш өнім желісі.",
@@ -215,8 +225,8 @@ const SITE_I18N = {
     "footer.copyright": "© 2026 EduVector Distribution. Барлық құқықтар қорғалған.",
     "footer.privacy": "Құпиялылық саясаты",
     "footer.terms": "Пайдалану шарттары",
-    "page.title.about": "Біз туралы - IntellectumUS",
-    "page.title.partners": "Серіктестерге - IntellectumUS",
+    "page.title.about": "EduVector Distribution туралы — мектептер мен STEM сыныптарына арналған EdTech",
+    "page.title.partners": "EduVector Distribution серіктестігі — EdTech дилерлік және мектеп бағдарламалары",
     "about.hero.eyebrow": "Компания",
     "about.hero.title": "Біз туралы",
     "about.hero.lead":

@@ -912,11 +912,28 @@ if (videoLayers.length > 0 && (bgCtx || useNativeTouchVideo)) {
   }
 }
 
-const PRESETS_STORAGE_KEY = "intellectum-us-glass-presets";
-const ACTIVE_PRESET_KEY = "intellectum-us-active-preset";
+const PRESETS_STORAGE_KEY = "eduvector-glass-presets";
+const ACTIVE_PRESET_KEY = "eduvector-active-preset";
 const DEFAULT_PRESET_ID = "user-5";
-const LEFT_GLASS_SETTINGS_KEY = "intellectum-us-left-glass-settings";
-const LEFT_GLASS_BLUR_LEGACY_KEY = "intellectum-us-left-glass-blur";
+const LEFT_GLASS_SETTINGS_KEY = "eduvector-left-glass-settings";
+const LEFT_GLASS_BLUR_LEGACY_KEY = "eduvector-left-glass-blur";
+
+(function () {
+  function migrateStorageKey(oldKey, newKey) {
+    try {
+      const value = localStorage.getItem(oldKey);
+      if (value !== null && localStorage.getItem(newKey) === null) {
+        localStorage.setItem(newKey, value);
+      }
+      localStorage.removeItem(oldKey);
+    } catch (_) {}
+  }
+
+  migrateStorageKey("intellectum-us-glass-presets", PRESETS_STORAGE_KEY);
+  migrateStorageKey("intellectum-us-active-preset", ACTIVE_PRESET_KEY);
+  migrateStorageKey("intellectum-us-left-glass-settings", LEFT_GLASS_SETTINGS_KEY);
+  migrateStorageKey("intellectum-us-left-glass-blur", LEFT_GLASS_BLUR_LEGACY_KEY);
+})();
 
 const BUILTIN_PRESETS = {
   "user-1": {
